@@ -12,11 +12,18 @@
  */
 
 #include "config.h"
+#include "log.h"
+#include <unistd.h>
 
 namespace myweb::common {
 
 bool Config::load(std::string_view path)
 {
+    // TODO: config is not parse
+    if (access(path.data(), F_OK)) {
+        LOGE("path is no exist");
+        // return false;
+    }
     port_ = 8888;
     return true;
 }

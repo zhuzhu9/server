@@ -26,8 +26,17 @@ constexpr int MAX_EVENT_NUMBER = 10000;
 
 class Epoll {
   public:
+    bool listenInit(int port);
+    void coreFun();
+    ~Epoll()
+    {
+        close(listenFd_);
+        close(epollFd_);
+    }
+
   private:
-    int listenFd = 0;
+    int listenFd_ = 0;
+    int epollFd_ = 0;
     epoll_event events[MAX_EVENT_NUMBER]{};
 };
 

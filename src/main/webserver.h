@@ -13,7 +13,6 @@
 #ifndef MAIN_WEBSERVER_H
 #define MAIN_WEBSERVER_H
 
-#include "config.h"
 #include "epoll.h"
 #include "singleton.h"
 
@@ -35,8 +34,8 @@ class Webserver : public utils::Singleton<Webserver> {
     bool listenInit();
 
     int port_ = 0;
-    int listen_fd_ = 0;
-    int epollfd_ = 0;
+    int listenFd_ = 0;
+    int epollFd_ = 0;
     Epoll ep_;
 };
 

@@ -23,7 +23,10 @@ static myweb::log::Logger &LOGDEFAULT = myweb::log::Logger::instance();
     } while (0)
 #define LOGI
 #define LOGW
-#define LOGE
+#define LOGE(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        LOGDEFAULT.Log(myweb::log::LogLevel::DEBUG, fmt, ##__VA_ARGS__);                                               \
+    } while (0)
 
 namespace myweb::log {
 
