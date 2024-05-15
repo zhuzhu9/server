@@ -34,8 +34,6 @@ class Webserver : public utils::Singleton<Webserver> {
     bool listenInit();
 
     int port_ = 0;
-    int listenFd_ = 0;
-    int epollFd_ = 0;
     Epoll ep_;
 };
 

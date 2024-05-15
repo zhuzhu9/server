@@ -30,14 +30,14 @@ class Epoll {
     void coreFun();
     ~Epoll()
     {
-        close(listenFd_);
-        close(epollFd_);
+        close(listen_fd_);
+        close(epoll_fd_);
     }
 
   private:
-    int listenFd_ = 0;
-    int epollFd_ = 0;
-    epoll_event events[MAX_EVENT_NUMBER]{};
+    int listen_fd_ = 0;
+    int epoll_fd_ = 0;
+    epoll_event events_[MAX_EVENT_NUMBER]{};
 };
 
 } // namespace myweb::socket::epoll
