@@ -44,6 +44,7 @@ void TimerList::tick()
                 break;
             }
         }
+        // TODO: 用信号量来休眠，不用sleep
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }

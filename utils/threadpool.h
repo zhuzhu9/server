@@ -25,6 +25,7 @@
 namespace myweb::utils {
 class ThreadPool {
   public:
+    // TODO: 按照thread封闭，现在不能接收类对象
     template <typename Fn, typename... Args>
     void commit(Fn &&fn, Args &&...args);
 
