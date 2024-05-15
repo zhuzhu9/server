@@ -18,7 +18,7 @@
 #include <mutex>
 #include <queue>
 
-namespace wyweb::utils {
+namespace myweb::utils {
 
 template <typename T>
 class SQueue {

@@ -47,7 +47,7 @@ class ZZLog {
     void operator()(std::string str) { log_qu_.emplace(std::move(str)); }
 
   private:
-    wyweb::utils::SQueue<std::string> log_qu_;
+    myweb::utils::SQueue<std::string> log_qu_;
     std::string_view file_path_;
     std::thread log_thread_;
 };

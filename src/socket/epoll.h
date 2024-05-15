@@ -43,6 +43,10 @@ class Epoll {
     }
 
   private:
+    void addFd(int fd) const;
+    void addFd(int fd, bool flag) const; // Epoll one shot
+    void deleteFd(int fd) const;
+
     int listen_fd_ = 0;
     int epoll_fd_ = 0;
     epoll_event events_[MAX_EVENT_NUMBER]{};

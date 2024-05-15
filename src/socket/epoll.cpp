@@ -65,17 +65,33 @@ void Epoll::coreFun()
                 socklen_t len = sizeof(caddr);
                 fd = accept(events_[i].data.fd, &caddr, &len);
 
-                epoll_event temp{EPOLLIN | EPOLLHUP, {.fd = fd}};
-                epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &temp);
+                addFd(fd);
                 LOGD("connect success");
             } else if (events_[i].events & (EPOLLRDHUP | EPOLLHUP | EPOLLERR)) {
-                close(events_[i].data.fd);
-                epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, events_[i].data.fd, nullptr);
+                deleteFd(events_[i].data.fd);
                 LOGD("close connect success");
             } else {
             }
         }
     }
+}
+
+void Epoll::addFd(int fd) const
+{
+    epoll_event temp{EPOLLIN | EPOLLHUP, {.fd = fd}};
+    epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &temp);
+}
+
+void Epoll::addFd(int fd, bool flag) const
+{
+    epoll_event temp{EPOLLIN | EPOLLHUP | EPOLLET | EPOLLONESHOT, {.fd = fd}};
+    epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &temp);
+}
+
+void Epoll::deleteFd(int fd) const
+{
+    close(fd);
+    epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr);
 }
 
 } // namespace myweb::socket::epoll

@@ -21,3 +21,4 @@ link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 include_directories(${PROJECT_SOURCE_DIR}/utils)
 
 add_subdirectory(src)
+add_subdirectory(tests)
