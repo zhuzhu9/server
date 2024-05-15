@@ -19,9 +19,8 @@ constexpr const char *DEFAULT_CONFIG_PATH = "1";
 
 namespace myweb::webserver {
 
-bool Webserver::init()
+bool WebServer::init()
 {
-    logInit();
 
     auto &config = common::Config::instance();
     config.load(DEFAULT_CONFIG_PATH);
@@ -36,36 +35,29 @@ bool Webserver::init()
     return false;
 }
 
-bool Webserver::logInit()
-{
-    LogInit("aaa");
-    LOGD("log init succeed");
-    return true;
-}
-
-bool Webserver::threadPoolInit()
+bool WebServer::threadPoolInit()
 {
     return true;
 }
 
-bool Webserver::sqlInit()
+bool WebServer::sqlInit()
 {
     return true;
 }
 
-bool Webserver::redisInit()
+bool WebServer::redisInit()
 {
     return true;
 }
 
-bool Webserver::listenInit()
+bool WebServer::listenInit()
 {
     return ep_.listenInit(port_);
 }
 
-void Webserver::start() {}
+void WebServer::start() {}
 
-void Webserver::run()
+void WebServer::run()
 {
     ep_.coreFun();
 }

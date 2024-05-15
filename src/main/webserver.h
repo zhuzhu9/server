@@ -20,14 +20,13 @@ namespace myweb::webserver {
 
 using namespace myweb::socket::epoll;
 
-class Webserver : public utils::Singleton<Webserver> {
+class WebServer : public utils::Singleton<WebServer> {
   public:
     bool init();
     void start();
     void run();
 
   private:
-    bool logInit();
     bool threadPoolInit();
     bool sqlInit();
     bool redisInit();
