@@ -26,3 +26,4 @@
 2. 日志级别判断
 3. 日志时间戳
 
+对比库： spdlog log4cpp fast_io

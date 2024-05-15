@@ -38,6 +38,8 @@ bool Webserver::init()
 
 bool Webserver::logInit()
 {
+    LogInit("aaa");
+    LOGD("log init succeed");
     return true;
 }
 

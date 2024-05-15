@@ -14,8 +14,12 @@
 #define LOGGER_H
 
 #include "singleton.h"
-#include <iostream>
+#include "squeue.h"
 #include <ostream>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <thread>
 
 namespace myweb::log {
 
@@ -27,19 +31,59 @@ enum class LogLevel : unsigned int {
     ERROR = 4,
     FATAL = 5,
 };
+class ZZLog {
+  public:
+    void print()
+    {
+        while (true) {
+            printConsole();
+            printFile();
+        }
+    };
+
+    void printConsole();
+    void printFile();
+    void init(std::string_view path);
+    void operator()(std::string str) { log_qu_.emplace(std::move(str)); }
+
+  private:
+    wyweb::utils::SQueue<std::string> log_qu_;
+    std::string_view file_path_;
+    std::thread log_thread_;
+};
 
 class Logger : public utils::Singleton<Logger> {
   public:
     template <typename... Args>
     void Log(LogLevel l, Args &&...args);
+    void init(std::string_view path) { log_.init(path); }
+
+  private:
+    ZZLog log_;
 };
 
 template <typename... Args>
 void Logger::Log(LogLevel l, Args &&...args)
 {
-    std::cout << "[" << __TIME__ << " " << __BASE_FILE__ << " " << __LINE__ << "] ";
-    ((std::cout << args), ...) << "\n";
+#if __cplusplus > 202003L
+    std::string fmt{std::format("[{} {}] ", "Hello", "world")};
+
+    for (int i{}; i != sizeof...(Args); ++i) {
+        fmt += "{} ";
+    }
+
+    std::string log = std::vformat(fmt, std::make_format_args(args...));
+    log_(log);
+#endif
+    std::stringstream ss;
+    ss << "[" << __TIME__ << " " << __BASE_FILE__ << " "
+       << "] ";
+    ((ss << args), ...) << "\n";
+
+    // std::cout << ss.str() << "\n";
+    log_(ss.str());
 }
+
 } // namespace myweb::log
 
 #endif // LOGGER_H

@@ -46,7 +46,7 @@ class SQueue {
     std::shared_ptr<T> wait_pop()
     {
         std::unique_lock<std::mutex> ul(lock_);
-        cv_.wait(ul, [this] { qu_.empty(); });
+        cv_.wait(ul, [this] { return !qu_.empty(); });
         auto res = std::make_shared<T>(qu_.front());
         qu_.pop();
         return res;
@@ -55,7 +55,7 @@ class SQueue {
     void wait_pop(T &dst)
     {
         std::unique_lock<std::mutex> ul(lock_);
-        cv_.wait(ul, [this] { qu_.empty(); });
+        cv_.wait(ul, [this] { return !qu_.empty(); });
         dst = qu_.front();
         qu_.pop();
     }

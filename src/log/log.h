@@ -17,6 +17,11 @@
 
 static myweb::log::Logger &LOGDEFAULT = myweb::log::Logger::instance();
 
+#define LogInit(cfg)                                                                                                   \
+    do {                                                                                                               \
+        LOGDEFAULT.init(cfg);                                                                                          \
+    } while (0)
+
 #define LOGD(fmt, ...)                                                                                                 \
     do {                                                                                                               \
         LOGDEFAULT.Log(myweb::log::LogLevel::DEBUG, fmt, ##__VA_ARGS__);                                               \
