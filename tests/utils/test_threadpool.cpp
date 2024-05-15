@@ -23,6 +23,7 @@ int main()
 {
     myweb::utils::ThreadPool t;
     t.commit(func, 10);
+    t.commit([] { std::cout << 50 << "\n"; });
 
     while (true)
         ;

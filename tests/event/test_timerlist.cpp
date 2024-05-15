@@ -26,6 +26,11 @@ int main()
 
     timer.commit(1000, -1, func, 1);
     timer.commit(2000, -1, func, 2);
+    timer.commit(
+        2000,
+        5,
+        [](int m) { std::cout << m << "\n"; },
+        10);
     timer.start();
 
     while (true)

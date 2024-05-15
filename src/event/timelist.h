@@ -14,6 +14,7 @@
 #define TIMELIST_H
 
 #include "singleton.h"
+#include "threadpool.h"
 #include "timer.h"
 #include <functional>
 #include <map>
@@ -42,8 +43,10 @@ class TimerList final : public utils::Singleton<TimerList> {
   private:
     void tick(); // 10ms tick
 
+    // FIXME: thread save
     std::multimap<long, Node> map_;
     std::thread th_;
+    utils::ThreadPool threadPool_;
 };
 
 template <typename Fn, typename... Args>

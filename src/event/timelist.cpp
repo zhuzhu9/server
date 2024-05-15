@@ -25,15 +25,21 @@ void TimerList::tick()
 {
     while (true) {
         int now_time = GetMonotonicTime<std::chrono::milliseconds, int>();
-        for (auto &[time, node] : map_) {
+        // for (auto &[time, node] : map_) {
+        for (auto it = map_.begin(); it != map_.end();) {
+            auto &[time, node] = *it;
             if (now_time > time) {
-                node.fn_();
+                threadPool_.commit(node.fn_);
                 if (node.repeat_ > 0)
                     --node.repeat_;
 
-                auto nh = map_.extract(time);
-                nh.key() = now_time + node.ms_;
-                map_.insert(std::move(nh));
+                if (node.repeat_ == 0) {
+                    it = map_.erase(it);
+                } else {
+                    auto nh = map_.extract(time);
+                    nh.key() = now_time + node.ms_;
+                    map_.insert(std::move(nh));
+                }
             } else {
                 break;
             }
