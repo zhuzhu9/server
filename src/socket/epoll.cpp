@@ -55,6 +55,7 @@ bool Epoll::listenInit(int port)
 
 void Epoll::coreFun()
 {
+    // TODO: 只处理了监听的fd，连接的fd都没有处理
     while (true) {
         int ret = epoll_wait(epoll_fd_, events_, MAX_EVENT_NUMBER, -1);
         for (int i = 0; i < ret; ++i) {

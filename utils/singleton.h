@@ -19,8 +19,8 @@ class Singleton {
   public:
     static T &instance()
     {
-        static T _instance;
-        return _instance;
+        static T instance_;
+        return instance_;
     }
 
     Singleton(const Singleton &) = delete;

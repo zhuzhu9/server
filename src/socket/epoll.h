@@ -27,10 +27,19 @@ class Epoll {
     constexpr static int MAX_EVENT_NUMBER = 10000;
     bool listenInit(int port);
     void coreFun();
+    Epoll() = default;
+    Epoll(const Epoll &) = default;
+    Epoll(Epoll &&) noexcept = default;
+    Epoll &operator=(const Epoll &) = default;
+    Epoll &operator=(Epoll &&) noexcept = default;
+
     ~Epoll()
     {
-        close(listen_fd_);
-        close(epoll_fd_);
+        if (listen_fd_ != 0)
+            close(listen_fd_);
+
+        if (epoll_fd_ != 0)
+            close(epoll_fd_);
     }
 
   private:

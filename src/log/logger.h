@@ -65,7 +65,10 @@ class Logger : public utils::Singleton<Logger> {
 template <typename... Args>
 void Logger::Log(LogLevel l, Args &&...args)
 {
+    // TODO: format success and parse failed (time file level line)
+    // TODO: 在这组str存在性能问题，此处为业务线程，应该把组str转移到log线程中
 #if __cplusplus > 202003L
+    // c++20 std::format
     std::string fmt{std::format("[{} {}] ", "Hello", "world")};
 
     for (int i{}; i != sizeof...(Args); ++i) {
