@@ -40,7 +40,7 @@ class TimerList final : public utils::Singleton<TimerList> {
     }
 
   private:
-    void tick();
+    void tick(); // 10ms tick
 
     std::multimap<long, Node> map_;
     std::thread th_;
