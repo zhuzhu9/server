@@ -27,7 +27,7 @@ bool Epoll::listenInit(int port)
 {
     listen_fd_ = ::socket(AF_INET, SOCK_STREAM, 0);
 
-    bool opt = true;
+    int opt = 1;
     setsockopt(listen_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
     sockaddr_in addr{};

@@ -22,10 +22,9 @@
 
 namespace myweb::socket::epoll {
 
-constexpr int MAX_EVENT_NUMBER = 10000;
-
 class Epoll {
   public:
+    constexpr static int MAX_EVENT_NUMBER = 10000;
     bool listenInit(int port);
     void coreFun();
     ~Epoll()
