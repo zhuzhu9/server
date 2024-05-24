@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    LogInit("aaa");
+    // LogInit("aaa");
     auto &server = myweb::webserver::WebServer::instance();
     server.init();
 

@@ -13,11 +13,17 @@
 
 #include "threadpool.h"
 #include <iostream>
+#include "log.h"
 
 void func(int a)
 {
     std::cout << a << "\n";
 }
+
+class A {
+  public:
+    void operator()() { std::cout << 10 << std::endl; }
+};
 
 int main()
 {
@@ -25,8 +31,10 @@ int main()
     t.commit(func, 10);
     t.commit([] { std::cout << 50 << "\n"; });
 
-    while (true)
-        ;
+    A a;
+    t.commit(a);
+    // while (true) {
+    // }
 
     return 0;
 }

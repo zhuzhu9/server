@@ -1,3 +1,4 @@
+set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
 add_subdirectory(socket)
 add_subdirectory(event)

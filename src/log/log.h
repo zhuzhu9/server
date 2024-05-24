@@ -15,6 +15,32 @@
 
 #include "logger.h"
 
+#if USE_LOG_SPDLOG
+// #define LogInit(cfg)                                                                                                   \
+//     do {                                                                                                               \
+//         LOGDEFAULT.init(cfg);                                                                                          \
+//     } while (0)
+
+#define LOGD(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        spdlog::debug(fmt, ##__VA_ARGS__);                                                                             \
+    } while (0)
+#define LOGI                                                                                                           \
+    do {                                                                                                               \
+        spdlog::info(fmt, ##__VA_ARGS__);                                                                              \
+    } while (0)
+#define LOGW                                                                                                           \
+    do {                                                                                                               \
+        spdlog::warning(fmt, ##__VA_ARGS__);                                                                           \
+    } while (0)
+#define LOGE(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        spdlog::error(fmt, ##__VA_ARGS__);                                                                             \
+    } while (0)
+#endif
+
+#if USE_LOG_ZLOG
+
 static myweb::log::Logger &LOGDEFAULT = myweb::log::Logger::instance();
 
 #define LogInit(cfg)                                                                                                   \
@@ -51,5 +77,6 @@ class Log {
 };
 
 } // namespace myweb::log
+#endif
 
 #endif // LOG_LOG_H

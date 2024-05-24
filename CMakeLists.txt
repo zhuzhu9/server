@@ -20,5 +20,20 @@ link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 include_directories(${PROJECT_SOURCE_DIR}/utils)
 
+
+set(CONFIG_LOG_USE_SPDLOG OFF)
+set(CONFIG_LOG_USE_ZLOG ON)
+
+
+if(CONFIG_LOG_USE_SPDLOG)
+    add_compile_options(-DUSE_LOG_SPDLOG)
+elseif(CONFIG_LOG_USE_ZLOG)
+    add_compile_options(-DUSE_LOG_ZLOG)
+endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
+add_subdirectory(third_party)
 add_subdirectory(src)
 add_subdirectory(tests)

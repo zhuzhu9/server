@@ -21,6 +21,8 @@
 #include <string_view>
 #include <thread>
 
+#include "spdlog/spdlog.h"
+
 namespace myweb::log {
 
 enum class LogLevel : unsigned int {

@@ -56,9 +56,11 @@ inline void ThreadPool::init()
                 if (tasks_.empty())
                     return;
 
+                // std::unique_lock<std::mutex> uk(mtx_);
                 auto fun = std::move(tasks_.front());
-                fun();
                 tasks_.pop();
+                // uk.unlock();
+                fun();
             }
         });
     }
@@ -67,6 +69,7 @@ inline void ThreadPool::init()
 inline void ThreadPool::stop()
 {
     stop_.store(true);
+    cv_.notify_all();
     for (auto &i : threads_) {
         if (i.joinable())
             i.join();
