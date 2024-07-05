@@ -13,7 +13,7 @@
 #ifndef LOG_LOG_H
 #define LOG_LOG_H
 
-#include "logger.h"
+#include "zlogger.h"
 
 #if USE_LOG_SPDLOG
 // #define LogInit(cfg)                                                                                                   \
@@ -41,22 +41,32 @@
 
 #if USE_LOG_ZLOG
 
-static myweb::log::Logger &LOGDEFAULT = myweb::log::Logger::instance();
+static myweb::zlog::Logger &LOGDEFAULT = myweb::zlog::Logger::instance();
 
 #define LogInit(cfg)                                                                                                   \
     do {                                                                                                               \
         LOGDEFAULT.init(cfg);                                                                                          \
     } while (0)
 
+#define LOGT(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        LOGDEFAULT.Log(myweb::zlog::LogLevel::trace, fmt, ##__VA_ARGS__);                                              \
+    } while (0)
 #define LOGD(fmt, ...)                                                                                                 \
     do {                                                                                                               \
-        LOGDEFAULT.Log(myweb::log::LogLevel::DEBUG, fmt, ##__VA_ARGS__);                                               \
+        LOGDEFAULT.Log(myweb::zlog::LogLevel::debug, fmt, ##__VA_ARGS__);                                              \
     } while (0)
-#define LOGI
-#define LOGW
+#define LOGI(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        LOGDEFAULT.Log(myweb::zlog::LogLevel::info, fmt, ##__VA_ARGS__);                                               \
+    } while (0)
+#define LOGW(fmt, ...)                                                                                                 \
+    do {                                                                                                               \
+        LOGDEFAULT.Log(myweb::zlog::LogLevel::warining, fmt, ##__VA_ARGS__);                                           \
+    } while (0)
 #define LOGE(fmt, ...)                                                                                                 \
     do {                                                                                                               \
-        LOGDEFAULT.Log(myweb::log::LogLevel::DEBUG, fmt, ##__VA_ARGS__);                                               \
+        LOGDEFAULT.Log(myweb::zlog::LogLevel::debug, fmt, ##__VA_ARGS__);                                              \
     } while (0)
 
 namespace myweb::log {

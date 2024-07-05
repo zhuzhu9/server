@@ -11,9 +11,9 @@
  * Copyright (c) 2024  Inc
  */
 
+#include "log.h"
 #include "threadpool.h"
 #include <iostream>
-#include "log.h"
 
 void func(int a)
 {
@@ -23,6 +23,9 @@ void func(int a)
 class A {
   public:
     void operator()() { std::cout << 10 << std::endl; }
+    // void test() { poll.commit(&A::operator(), this); }
+
+    myweb::utils::ThreadPool poll;
 };
 
 int main()
@@ -31,10 +34,11 @@ int main()
     t.commit(func, 10);
     t.commit([] { std::cout << 50 << "\n"; });
 
-    A a;
-    t.commit(a);
-    // while (true) {
-    // }
+    // A a;
+    // t.commit(a);
+
+    // A b;
+    // b.test();
 
     return 0;
 }

@@ -20,6 +20,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <tuple>
 #include <utility>
 #include <vector>
 namespace myweb::utils {
@@ -28,6 +29,9 @@ class ThreadPool {
     // TODO: 按照thread封闭，现在不能接收类对象
     template <typename Fn, typename... Args>
     void commit(Fn &&fn, Args &&...args);
+
+    template <typename Fn, typename... Args>
+    void submit(Fn &&fn, Args &&...args);
 
     explicit ThreadPool(int num = 5) : thread_num_(num) { init(); }
     ~ThreadPool() { stop(); };
@@ -79,7 +83,7 @@ inline void ThreadPool::stop()
 template <typename Fn, typename... Args>
 void ThreadPool::commit(Fn &&fn, Args &&...args)
 {
-    using RetType = decltype(std::forward<Fn>(fn)(std::forward<Args>(args)...));
+    using RetType = decltype((std::forward<Fn>(fn))(std::forward<Args>(args)...));
     auto fun = std::make_shared<std::function<RetType()>>(
         std::bind<RetType>(std::forward<Fn>(fn), std::forward<Args>(args)...));
     {
@@ -87,6 +91,12 @@ void ThreadPool::commit(Fn &&fn, Args &&...args)
         tasks_.emplace([fun] { (*fun)(); });
     }
     cv_.notify_one();
+}
+
+template <typename Fn, typename... Args>
+void ThreadPool::submit(Fn &&fn, Args &&...args)
+{
+    // using Tuple = std::tuple<>
 }
 
 } // namespace myweb::utils

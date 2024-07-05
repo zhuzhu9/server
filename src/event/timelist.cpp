@@ -23,6 +23,8 @@ using myweb::utils::time::GetMonotonicTime;
 
 void TimerList::tick()
 {
+    using namespace std::chrono_literals;
+
     while (true) {
         int now_time = GetMonotonicTime<std::chrono::milliseconds, int>();
         // for (auto &[time, node] : map_) {
@@ -44,8 +46,8 @@ void TimerList::tick()
                 break;
             }
         }
-        // TODO: 用信号量来休眠，不用sleep
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        // TODO: 用条件变量来休眠，不用sleep
+        std::this_thread::sleep_for(10ms);
     }
 }
 
