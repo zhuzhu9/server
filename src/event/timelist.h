@@ -34,18 +34,11 @@ class TimerList final : public utils::Singleton<TimerList> {
     template <typename Fn, typename... Args>
     void commit(int ms, int repeat, Fn &&fn, Args &&...args);
     void start();
-    ~TimerList()
-    {
-        if (th_.joinable())
-            th_.join();
-    }
 
   private:
     void tick(); // 10ms tick
 
-    // FIXME: thread save
     std::multimap<long, Node> map_;
-    std::thread th_;
     utils::ThreadPool threadPool_;
 };
 

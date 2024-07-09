@@ -28,10 +28,26 @@ class ThreadPool {
   public:
     // TODO: 按照thread封闭，现在不能接收类对象
     template <typename Fn, typename... Args>
-    void commit(Fn &&fn, Args &&...args);
+    [[deprecated("please use submit")]] void commit(Fn &&fn, Args &&...args);
 
     template <typename Fn, typename... Args>
     void submit(Fn &&fn, Args &&...args);
+
+    template <typename Tuple, size_t... Indices>
+    static unsigned int Invoke(void *arg)
+    {
+        std::unique_ptr<Tuple> FnArg(static_cast<Tuple *>(arg));
+        Tuple &Tup = *FnArg.get();
+        std::invoke(std::move(std::get<Indices>(Tup))...);
+
+        return 0;
+    }
+
+    template <typename Tuple, size_t... Indices>
+    static constexpr auto star(std::index_sequence<Indices...>)
+    {
+        return Invoke<Tuple, Indices...>;
+    }
 
     explicit ThreadPool(int num = 5) : thread_num_(num) { init(); }
     ~ThreadPool() { stop(); };
@@ -55,15 +71,16 @@ inline void ThreadPool::init()
     for (int i = 0; i < thread_num_; i++) {
         threads_.emplace_back([this] {
             while (!stop_) {
-                std::unique_lock<std::mutex> ul(mtx_);
-                cv_.wait(ul, [this] { return !tasks_.empty() || stop_.load(); });
-                if (tasks_.empty())
-                    return;
+                std::function<void()> fun{};
+                {
+                    std::unique_lock<std::mutex> ul(mtx_);
+                    cv_.wait(ul, [this] { return !tasks_.empty() || stop_.load(); });
+                    if (tasks_.empty())
+                        return;
 
-                // std::unique_lock<std::mutex> uk(mtx_);
-                auto fun = std::move(tasks_.front());
-                tasks_.pop();
-                // uk.unlock();
+                    fun = std::move(tasks_.front());
+                    tasks_.pop();
+                }
                 fun();
             }
         });
@@ -96,7 +113,15 @@ void ThreadPool::commit(Fn &&fn, Args &&...args)
 template <typename Fn, typename... Args>
 void ThreadPool::submit(Fn &&fn, Args &&...args)
 {
-    // using Tuple = std::tuple<>
+    using Tuple = std::tuple<std::decay_t<Fn>, std::decay_t<Args>...>;
+    auto DoCopy = std::make_unique<Tuple>(std::forward<Fn>(fn), std::forward<Args>(args)...);
+    auto Func = star<Tuple>(std::make_index_sequence<1 + sizeof...(Args)>{});
+    void *arg = DoCopy.release();
+    {
+        std::lock_guard<std::mutex> a(mtx_);
+        tasks_.emplace([Func, arg] { Func(arg); });
+    }
+    cv_.notify_one();
 }
 
 } // namespace myweb::utils

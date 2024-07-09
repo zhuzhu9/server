@@ -27,11 +27,10 @@ void TimerList::tick()
 
     while (true) {
         int now_time = GetMonotonicTime<std::chrono::milliseconds, int>();
-        // for (auto &[time, node] : map_) {
         for (auto it = map_.begin(); it != map_.end();) {
             auto &[time, node] = *it;
             if (now_time > time) {
-                threadPool_.commit(node.fn_);
+                threadPool_.submit(node.fn_);
                 if (node.repeat_ > 0)
                     --node.repeat_;
 
@@ -53,8 +52,7 @@ void TimerList::tick()
 
 void TimerList::start()
 {
-    th_ = std::thread(&TimerList::tick, this);
-    th_.detach();
+    threadPool_.submit(&TimerList::tick, this);
 }
 
 } // namespace myweb::event::timer
