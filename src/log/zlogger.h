@@ -15,6 +15,7 @@
 
 #include "singleton.h"
 #include "squeue.h"
+#include <atomic>
 #include <format>
 #include <source_location>
 #include <sstream>
@@ -38,21 +39,36 @@ class ZLog {
   public:
     void print()
     {
-        while (true) {
+        do {
             printConsole();
             printFile();
-        }
+        } while (!stop_.load() && log_qu_.empty());
     };
 
     void printConsole();
     void printFile();
     void init(std::string_view path);
-    void operator()(std::string str) { log_qu_.emplace(std::move(str)); }
+    void operator()(std::string str) { log_qu_.push(std::move(str)); }
+
+    ZLog() = default;
+    ZLog(const ZLog &) = delete;
+    ZLog(ZLog &&) noexcept = delete;
+    ZLog &operator=(const ZLog &) = delete;
+    ZLog &operator=(ZLog &&) noexcept = delete;
+
+    ~ZLog()
+    {
+        stop_.store(true);
+        if (log_thread_.joinable()) {
+            log_thread_.join();
+        }
+    }
 
   private:
-    myweb::utils::SQueue<std::string> log_qu_;
+    myweb::utils::SQueue<std::string> log_qu_; // TODO: double buffer
     std::string_view file_path_;
     std::thread log_thread_;
+    std::atomic_bool stop_{false};
 };
 
 template <typename T>

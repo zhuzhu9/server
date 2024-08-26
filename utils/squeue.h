@@ -30,10 +30,10 @@ class SQueue {
         cv_.notify_one();
     };
 
-    void emplace(T &&value)
+    void push(T &&value)
     {
         std::lock_guard<std::mutex> lg(lock_);
-        qu_.emplace(value);
+        qu_.push(std::move(value));
         cv_.notify_one();
     }
 
@@ -93,6 +93,6 @@ class SQueue {
     std::condition_variable cv_{};
 };
 
-} // namespace wyweb::utils
+} // namespace myweb::utils
 
 #endif // SQUEUE_H

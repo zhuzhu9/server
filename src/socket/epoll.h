@@ -13,14 +13,17 @@
 #ifndef SOCKET_EPOLL_H
 #define SOCKET_EPOLL_H
 
+#include "socket.hpp"
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <memory>
 #include <netinet/in.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 namespace myweb::socket::epoll {
+using namespace myweb::socket::socket;
 
 class Epoll {
   public:
@@ -33,22 +36,15 @@ class Epoll {
     Epoll &operator=(const Epoll &) = default;
     Epoll &operator=(Epoll &&) noexcept = default;
 
-    ~Epoll()
-    {
-        if (listen_fd_ != 0)
-            close(listen_fd_);
-
-        if (epoll_fd_ != 0)
-            close(epoll_fd_);
-    }
+    ~Epoll() = default;
 
   private:
     void addFd(int fd) const;
     void addFd(int fd, bool flag) const; // Epoll one shot
     void deleteFd(int fd) const;
 
-    int listen_fd_ = 0;
-    int epoll_fd_ = 0;
+    std::shared_ptr<Socket> listen_fd_ = 0;
+    std::shared_ptr<Socket> epoll_fd_ = 0;
     epoll_event events_[MAX_EVENT_NUMBER]{};
 };
 

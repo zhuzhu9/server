@@ -28,9 +28,8 @@ void ZLog::init(std::string_view path)
 {
     file_path_ = path;
     log_thread_ = std::thread(&ZLog::print, this);
-    log_thread_.detach();
 }
 
-void ZLog::printFile() {}
+void ZLog::printFile() {} // 3s swap double buffer
 
 } // namespace myweb::zlog
