@@ -20,6 +20,7 @@
 #include "zlog_msg.h"
 #include <atomic>
 #include <format>
+#include <iostream>
 #include <source_location>
 #include <string_view>
 #include <thread>

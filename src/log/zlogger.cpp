@@ -14,6 +14,7 @@
 #include "zlogger.h"
 #include "fast_io.h"
 #include "zlog_msg.h"
+#include <cstring>
 #include <iostream>
 #include <thread>
 
@@ -23,9 +24,9 @@ void ZLog::printConsole()
 {
     ZlogMsg msg{};
     log_qu_.wait_pop(msg);
+    std::string file_name = ZLOG_FILE_NAME(msg.loc_.file_name());
 
-    // ::fast_io::io::println(msg.payload_);
-    std::cout << msg.payload_;
+    ::fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
 }
 
 void ZLog::init(std::string_view path)

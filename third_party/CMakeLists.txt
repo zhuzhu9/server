@@ -6,4 +6,4 @@ if(CONFIG_YAML_CPP)
 add_subdirectory(yaml-cpp)
 endif()
 
-add_subdirectory(fast_io)
+# add_subdirectory(fast_io)

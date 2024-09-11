@@ -26,9 +26,9 @@ struct ZlogMsg {
             std::source_location loc,
             std::string_view logger_name,
             LogLevel lvl,
-            std::string_view msg);
-    ZlogMsg(std::source_location loc, std::string_view logger_name, LogLevel lvl, std::string_view msg);
-    ZlogMsg(std::string_view logger_name, LogLevel lvl, std::string_view msg);
+            std::string msg);
+    ZlogMsg(std::source_location loc, std::string_view logger_name, LogLevel lvl, std::string msg);
+    ZlogMsg(std::string_view logger_name, LogLevel lvl, std::string msg);
     ZlogMsg(const ZlogMsg &other) = default;
     ZlogMsg &operator=(const ZlogMsg &other) = default;
     ZlogMsg(ZlogMsg &&other) noexcept = default;
@@ -41,7 +41,7 @@ struct ZlogMsg {
     std::size_t thread_id__{0};
 
     std::source_location loc_;
-    std::string_view payload_;
+    std::string payload_;
 };
 
 } // namespace myweb::zlog
