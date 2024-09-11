@@ -12,6 +12,8 @@
  */
 
 #include "zlogger.h"
+#include "fast_io.h"
+#include "zlog_msg.h"
 #include <iostream>
 #include <thread>
 
@@ -19,9 +21,11 @@ namespace myweb::zlog {
 
 void ZLog::printConsole()
 {
-    std::string log;
-    log_qu_.wait_pop(log);
-    std::cout << log;
+    ZlogMsg msg{};
+    log_qu_.wait_pop(msg);
+
+    // ::fast_io::io::println(msg.payload_);
+    std::cout << msg.payload_;
 }
 
 void ZLog::init(std::string_view path)

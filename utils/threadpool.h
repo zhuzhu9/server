@@ -13,12 +13,14 @@
 #ifndef UTILS_THREADPOOL_H
 #define UTILS_THREADPOOL_H
 
+#include "os.h"
 #include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <string_view>
 #include <thread>
 #include <tuple>
 #include <utility>
@@ -26,7 +28,6 @@
 namespace myweb::utils {
 class ThreadPool {
   public:
-    // TODO: 按照thread封闭，现在不能接收类对象
     template <typename Fn, typename... Args>
     [[deprecated("please use submit")]] void commit(Fn &&fn, Args &&...args);
 
@@ -50,11 +51,15 @@ class ThreadPool {
     }
 
     explicit ThreadPool(int num = 5) : thread_num_(num) { init(); }
+    explicit ThreadPool(std::string_view name, int num = 5) : name_(name), thread_num_(num) { init(); }
+
     ~ThreadPool() { stop(); };
 
   private:
     void init();
     void stop();
+
+    std::string_view name_;
 
     std::queue<std::function<void()>> tasks_;
     std::atomic<bool> stop_{false};
@@ -69,7 +74,13 @@ class ThreadPool {
 inline void ThreadPool::init()
 {
     for (int i = 0; i < thread_num_; i++) {
-        threads_.emplace_back([this] {
+        threads_.emplace_back([this, &i] {
+            // TODO
+            if (!name_.empty()) {
+                std::string n = std::string{name_.data()} + "_" + std::to_string(i);
+                os::system::SetThreadName(n.c_str());
+            }
+
             while (!stop_) {
                 std::function<void()> fun{};
                 {

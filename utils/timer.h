@@ -32,6 +32,16 @@ inline T GetTimestamp()
         .count();
 }
 
+inline std::chrono::time_point<std::chrono::system_clock> GetTimeNow()
+{
+    return std::chrono::system_clock::now();
+}
+
+inline std::chrono::time_point<std::chrono::steady_clock> GetMonotonicTimeNow()
+{
+    return std::chrono::steady_clock::now();
+}
+
 } // namespace myweb::utils::time
 
 #endif // UTILS_TIMER_H

@@ -14,7 +14,6 @@
 #include "timelist.h"
 #include "timer.h"
 #include <chrono>
-#include <functional>
 #include <thread>
 
 namespace myweb::event::timer {
@@ -38,15 +37,14 @@ void TimerList::tick()
                     it = map_.erase(it);
                 } else {
                     auto nh = map_.extract(time);
-                    nh.key() = now_time + node.ms_;
+                    nh.key() += node.ms_;
                     map_.insert(std::move(nh));
                 }
             } else {
                 break;
             }
         }
-        // TODO: 用条件变量来休眠，不用sleep
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(50ms);
     }
 }
 

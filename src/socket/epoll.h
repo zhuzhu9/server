@@ -43,8 +43,8 @@ class Epoll {
     void addFd(int fd, bool flag) const; // Epoll one shot
     void deleteFd(int fd) const;
 
-    std::shared_ptr<Socket> listen_fd_ = 0;
-    std::shared_ptr<Socket> epoll_fd_ = 0;
+    std::shared_ptr<Socket> listen_fd_;
+    std::shared_ptr<Socket> epoll_fd_;
     epoll_event events_[MAX_EVENT_NUMBER]{};
 };
 

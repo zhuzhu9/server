@@ -18,7 +18,7 @@
 #include "timer.h"
 #include <functional>
 #include <map>
-#include <thread>
+#include <semaphore>
 
 namespace myweb::event::timer {
 
@@ -34,6 +34,8 @@ class TimerList final : public utils::Singleton<TimerList> {
     template <typename Fn, typename... Args>
     void commit(int ms, int repeat, Fn &&fn, Args &&...args);
     void start();
+
+    TimerList() : threadPool_("timelist"){};
 
   private:
     void tick(); // 10ms tick

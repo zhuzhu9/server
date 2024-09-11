@@ -11,30 +11,35 @@
  * Copyright (c) 2024  Inc
  */
 
+#include "log.h"
 #include "timelist.h"
 #include <iostream>
+#include <thread>
 
 void func(int a)
 {
-    std::cout << a << "\n";
+    LOGD("{}", a);
 }
 
 int main()
 {
+    using namespace std::chrono_literals;
+    LogInit("aaa");
     using namespace myweb::event::timer;
     TimerList &timer = TimerList::instance();
 
-    timer.commit(1000, -1, func, 1);
-    timer.commit(2000, -1, func, 2);
-    timer.commit(
-        2000,
-        5,
-        [](int m) { std::cout << m << "\n"; },
-        10);
+    timer.commit(100, -1, func, 2);
+    // timer.commit(
+    //     2000,
+    //     5,
+    //     [](int m) { std::cout << m << "\n"; },
+    //     10);
+
     timer.start();
 
-    while (true)
-        ;
+    while (true) {
+        std::this_thread::sleep_for(10s);
+    };
 
     return 0;
 }
