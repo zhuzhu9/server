@@ -33,6 +33,7 @@ namespace myweb::zlog {
 
 class ZLog {
   public:
+    // TODO: 分别插入不用写入方式的接口
     void print()
     {
         os::system::SetThreadName("Zlog_async");

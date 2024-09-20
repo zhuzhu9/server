@@ -75,7 +75,7 @@ inline void ThreadPool::init()
 {
     for (int i = 0; i < thread_num_; i++) {
         threads_.emplace_back([this, &i] {
-            // TODO
+            // TODO: 删除事件
             if (!name_.empty()) {
                 std::string n = std::string{name_.data()} + "_" + std::to_string(i);
                 os::system::SetThreadName(n.c_str());

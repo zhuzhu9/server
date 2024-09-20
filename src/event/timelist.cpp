@@ -44,6 +44,7 @@ void TimerList::tick()
                 break;
             }
         }
+        // TODO: 时间补偿 不能为固定值，根据CPU调度唤醒对下一次sleep的补偿
         std::this_thread::sleep_for(50ms);
     }
 }
