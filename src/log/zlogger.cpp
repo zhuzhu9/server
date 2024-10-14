@@ -13,9 +13,9 @@
 
 #include "zlogger.h"
 #include "fast_io.h"
+#include "os.h"
 #include "zlog_msg.h"
 #include <cstring>
-#include <iostream>
 #include <thread>
 
 namespace myweb::zlog {
@@ -34,6 +34,15 @@ void ZLog::init(std::string_view path)
     file_path_ = path;
     log_thread_ = std::thread(&ZLog::print, this);
 }
+
+void ZLog::print()
+{
+    os::system::SetThreadName("Zlog_async");
+    do {
+        printConsole();
+        printFile();
+    } while (!stop_.load() && !log_qu_.empty());
+};
 
 void ZLog::printFile() {} // 3s swap double buffer
 

@@ -13,14 +13,12 @@
 #ifndef ZLOGGER_H
 #define ZLOGGER_H
 
-#include "os.h"
 #include "singleton.h"
 #include "squeue.h"
 #include "zlog_default.h"
 #include "zlog_msg.h"
 #include <atomic>
 #include <format>
-#include <iostream>
 #include <source_location>
 #include <string_view>
 #include <thread>
@@ -34,19 +32,16 @@ namespace myweb::zlog {
 class ZLog {
   public:
     // TODO: 分别插入不用写入方式的接口
-    void print()
-    {
-        os::system::SetThreadName("Zlog_async");
-        do {
-            printConsole();
-            printFile();
-        } while (!stop_.load() && log_qu_.empty());
-    };
-
+    void print();
     void printConsole();
     void printFile();
     void init(std::string_view path);
-    void operator()(ZlogMsg msg) { log_qu_.push(msg); }
+    void operator()(const ZlogMsg &msg)
+    {
+        // if (!stop_.load()) {
+        log_qu_.push(msg);
+        // }
+    }
 
     ZLog() = default;
     ZLog(const ZLog &) = delete;
