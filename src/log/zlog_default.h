@@ -12,6 +12,7 @@
 #ifndef ZLOG_DEFAULT_H
 #define ZLOG_DEFAULT_H
 
+#include <compare>
 #define ZLOG_FOREACH_LOG_LEVEL(f) f(trace) f(debug) f(info) f(warining) f(error) f(fatal)
 namespace myweb::zlog {
 
@@ -21,6 +22,11 @@ enum class LogLevel : unsigned int {
 #undef ZLOG_FUNCTION
         none
 };
+
+constexpr std::strong_ordering operator<=>(LogLevel lhs, LogLevel rhs)
+{
+    return static_cast<unsigned int>(lhs) <=> static_cast<unsigned int>(rhs);
+}
 } // namespace myweb::zlog
 #undef ZLOG_FOREACH_LOG_LEVEL
 

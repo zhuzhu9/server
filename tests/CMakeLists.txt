@@ -3,3 +3,4 @@ include_directories(${PROJECT_SOURCE_DIR}/src/event/common/ ${PROJECT_SOURCE_DIR
 
 add_subdirectory(event)
 add_subdirectory(utils)
+add_subdirectory(log)

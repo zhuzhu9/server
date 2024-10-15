@@ -16,9 +16,11 @@
 #include "singleton.h"
 #include "squeue.h"
 #include "zlog_default.h"
+#include "zlog_enhance.h"
 #include "zlog_msg.h"
 #include <atomic>
 #include <format>
+#include <iostream>
 #include <source_location>
 #include <string_view>
 #include <thread>
@@ -36,12 +38,10 @@ class ZLog {
     void printConsole();
     void printFile();
     void init(std::string_view path);
-    void operator()(const ZlogMsg &msg)
-    {
-        // if (!stop_.load()) {
-        log_qu_.push(msg);
-        // }
-    }
+    void operator()(const ZlogMsg &msg) { log_qu_.push(msg); }
+
+    bool should_log(LogLevel msg_level) const { return msg_level >= lvl_; }
+    void set_level(LogLevel msg_level) { lvl_ = msg_level; }
 
     ZLog() = default;
     ZLog(const ZLog &) = delete;
@@ -62,6 +62,7 @@ class ZLog {
     std::string_view file_path_;
     std::thread log_thread_;
     std::atomic_bool stop_{false};
+    LogLevel lvl_{LogLevel::debug};
 };
 
 template <typename T>
@@ -84,10 +85,11 @@ class Logger : public utils::Singleton<Logger> {
     void init(std::string_view path) { log_.init(path); }
     template <typename... Args>
     void Log(LogLevel l, Temp<std::format_string<Args...>> &&fmt, Args &&...args);
+    void set_level(LogLevel msg_level) { log_.set_level(msg_level); }
 
 // TODO: 在这组str存在性能问题，此处为业务线程，应该把组str转移到log线程中
 #define ZLOG_FUNCTION(x)                                                                                               \
-    template <class... Types>                                                                                          \
+    template <typename... Types>                                                                                       \
     void log_##x(Temp<std::format_string<Types...>> fmt, Types &&...args)                                              \
     {                                                                                                                  \
         auto &loc = fmt.location();                                                                                    \
@@ -105,6 +107,8 @@ class Logger : public utils::Singleton<Logger> {
 template <typename... Args>
 void Logger::Log(LogLevel l, Temp<std::format_string<Args...>> &&fmt, Args &&...args)
 {
+    if (!log_.should_log(l))
+        return;
     switch (l) {
 #define ZLOG_FUNCTION(x)                                                                                               \
     case LogLevel::x:                                                                                                  \

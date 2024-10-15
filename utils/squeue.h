@@ -59,6 +59,16 @@ class SQueue {
         dst = qu_.front();
         qu_.pop();
     }
+    bool wait_for_pop(T &dst, std::chrono::milliseconds ms)
+    {
+        std::unique_lock<std::mutex> ul(lock_);
+        if (cv_.wait_for(ul, ms, [this] { return !qu_.empty(); })) {
+            dst = qu_.front();
+            qu_.pop();
+            return true;
+        }
+        return false;
+    }
 
     SQueue() = default;
     SQueue(const SQueue &other)

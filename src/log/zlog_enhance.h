@@ -16,9 +16,8 @@
 #include <format>
 
 template <typename CharT>
-
-struct std::formatter<myweb::zlog::LogLevel, CharT> {
-    template <class FormatContext>
+struct std::formatter<myweb::zlog::LogLevel, CharT> : std::formatter<char, CharT> {
+    template <typename FormatContext>
     auto format(myweb::zlog::LogLevel t, FormatContext &fc) const
     {
         switch (t) {
@@ -34,9 +33,10 @@ struct std::formatter<myweb::zlog::LogLevel, CharT> {
             return std::formatter<char, CharT>::format('E', fc);
         case myweb::zlog::LogLevel::fatal:
             return std::formatter<char, CharT>::format('F', fc);
-        case myweb::zlog::LogLevel::none:
-            return "";
+        default:
+            return std::formatter<char, CharT>::format(' ', fc);
         }
+        return std::formatter<char, CharT>::format(' ', fc);
     }
 };
 

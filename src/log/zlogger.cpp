@@ -22,11 +22,13 @@ namespace myweb::zlog {
 
 void ZLog::printConsole()
 {
+    using namespace std::chrono_literals;
     ZlogMsg msg{};
-    log_qu_.wait_pop(msg);
-    std::string file_name = ZLOG_FILE_NAME(msg.loc_.file_name());
+    if (log_qu_.wait_for_pop(msg, 100ms)) {
+        std::string file_name = ZLOG_FILE_NAME(msg.loc_.file_name());
 
-    ::fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
+        ::fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
+    }
 }
 
 void ZLog::init(std::string_view path)
@@ -39,9 +41,10 @@ void ZLog::print()
 {
     os::system::SetThreadName("Zlog_async");
     do {
+
         printConsole();
         printFile();
-    } while (!stop_.load() && !log_qu_.empty());
+    } while (!stop_.load() || !log_qu_.empty());
 };
 
 void ZLog::printFile() {} // 3s swap double buffer

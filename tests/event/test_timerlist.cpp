@@ -13,7 +13,6 @@
 
 #include "log.h"
 #include "timelist.h"
-#include <iostream>
 #include <thread>
 
 void func(int a)
