@@ -20,14 +20,12 @@
 #include "zlog_msg.h"
 #include <atomic>
 #include <format>
-#include <iostream>
 #include <source_location>
 #include <string_view>
 #include <thread>
 #include <utility>
 
 #define ZLOG_FOREACH_LOG_LEVEL(f) f(trace) f(debug) f(info) f(warining) f(error) f(fatal)
-#define ZLOG_FILE_NAME(name) (std::strrchr(name, '/') ? (std::strrchr(name, '/') + 1) : name)
 
 namespace myweb::zlog {
 

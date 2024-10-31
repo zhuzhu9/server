@@ -49,8 +49,7 @@ void TimerList::commit(int ms, int repeat, Fn &&fn, Args &&...args)
 {
     using RetType = decltype(std::forward<Fn>(fn)(std::forward<Args>(args)...));
     auto callback = std::bind<RetType>(std::forward<Fn>(fn), std::forward<Args>(args)...);
-    map_.emplace(std::make_pair<long, Node>(ms + myweb::utils::time::GetMonotonicTime<std::chrono::milliseconds, int>(),
-                                            {callback, ms, repeat}));
+    map_.insert({ms + myweb::utils::time::GetMonotonicTime<std::chrono::milliseconds, long>(), {callback, ms, repeat}});
 }
 
 } // namespace myweb::event::timer

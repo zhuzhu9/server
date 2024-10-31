@@ -19,6 +19,7 @@
 #include <thread>
 
 namespace myweb::zlog {
+#define ZLOG_FILE_NAME(name) (std::strrchr(name, '/') ? (std::strrchr(name, '/') + 1) : name)
 
 void ZLog::printConsole()
 {
@@ -27,14 +28,14 @@ void ZLog::printConsole()
     if (log_qu_.wait_for_pop(msg, 100ms)) {
         std::string file_name = ZLOG_FILE_NAME(msg.loc_.file_name());
 
-        ::fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
+        fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
     }
 }
 
 void ZLog::init(std::string_view path)
 {
     file_path_ = path;
-    log_thread_ = std::thread(&ZLog::print, this);
+    log_thread_ = std::thread{&ZLog::print, this};
 }
 
 void ZLog::print()

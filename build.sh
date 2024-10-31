@@ -1,9 +1,7 @@
 #! /bin/bash
 
-function build()
-{
-    if [ ! -d build ]
-    then
+function build() {
+    if [ ! -d build ]; then
         mkdir -p build
     fi
     cd build
@@ -12,19 +10,15 @@ function build()
     make -j 16
 }
 
-function clean()
-{
-    if [ -d build ]
-    then
+function clean() {
+    if [ -d build ]; then
         cd build
         rm -rf ./*
     fi
 }
 
-function main()
-{
-    if [[ $# > 0 ]]
-    then
+function main() {
+    if [[ $# > 0 ]]; then
         case $1 in
         "distclean" | "clean")
             clean
