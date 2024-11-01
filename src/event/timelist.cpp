@@ -14,6 +14,7 @@
 #include "timelist.h"
 #include "timer.h"
 #include <chrono>
+#include <ratio>
 #include <thread>
 
 namespace myweb::event::timer {
@@ -22,10 +23,9 @@ using myweb::utils::time::GetMonotonicTime;
 
 void TimerList::tick()
 {
-    using namespace std::chrono_literals;
-
+    std::chrono::milliseconds sleep_time = time_;
     while (true) {
-        int now_time = GetMonotonicTime<std::chrono::milliseconds, int>();
+        long now_time = GetMonotonicTime<std::chrono::milliseconds, long>();
         for (auto it = map_.begin(); it != map_.end();) {
             auto &[time, node] = *it;
             if (now_time > time) {
@@ -41,11 +41,11 @@ void TimerList::tick()
                     map_.insert(std::move(nh));
                 }
             } else {
+                sleep_time = std::chrono::milliseconds{map_.begin()->first - now_time};
                 break;
             }
         }
-        // TODO: 时间补偿 不能为固定值，根据CPU调度唤醒对下一次sleep的补偿
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(sleep_time);
     }
 }
 

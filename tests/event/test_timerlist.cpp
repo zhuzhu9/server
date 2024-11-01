@@ -17,7 +17,7 @@
 
 void func(int a)
 {
-    LOGD("{}", a);
+    LOGI("{}", a);
 }
 
 int main()
@@ -26,6 +26,8 @@ int main()
     LogInit("aaa");
     using namespace myweb::event::timer;
     TimerList &timer = TimerList::instance();
+    timer.commit(1000, -1, func, 501);
+    timer.start();
 
     timer.commit(100, -1, func, 2);
     // timer.commit(
@@ -33,8 +35,6 @@ int main()
     //     5,
     //     [](int m) { std::cout << m << "\n"; },
     //     10);
-
-    timer.start();
 
     while (true) {
         std::this_thread::sleep_for(10s);

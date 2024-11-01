@@ -21,6 +21,7 @@
 #include <semaphore>
 
 namespace myweb::event::timer {
+using namespace std::chrono_literals;
 
 class TimerList final : public utils::Singleton<TimerList> {
   private:
@@ -42,6 +43,8 @@ class TimerList final : public utils::Singleton<TimerList> {
 
     std::multimap<long, Node> map_;
     utils::ThreadPool threadPool_;
+
+    std::chrono::milliseconds time_ = 10ms;
 };
 
 template <typename Fn, typename... Args>
