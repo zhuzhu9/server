@@ -12,13 +12,13 @@
  */
 
 #include "log.h"
-#include "zlog_default.h"
+#include "spdlog/common.h"
 
 int main()
 {
     using namespace std::chrono_literals;
     LogInit("aaa");
-    LOGDEFAULT.set_level(myweb::zlog::LogLevel::info);
+    myweb::zlog::LOGDEFAULT->set_level(spdlog::level::debug);
     LOGT("log trace");
     LOGD("log debug");
     LOGI("log info");
@@ -54,8 +54,8 @@ int main()
     std::logic_error le("logic error");
     // LOGE("le: {}", le); // TODO
 
-    myweb::zlog::LogLevel log_level{myweb::zlog::LogLevel::debug};
-    LOGD("log level: {}", log_level);
+    // myweb::zlog::LogLevel log_level{myweb::zlog::LogLevel::debug};
+    // LOGD("log level: {}", log_level);
 
     return 0;
 }

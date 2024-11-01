@@ -13,7 +13,7 @@
 #define ZLOG_DEFAULT_H
 
 #include <compare>
-#define ZLOG_FOREACH_LOG_LEVEL(f) f(trace) f(debug) f(info) f(warining) f(error) f(fatal)
+#define ZLOG_FOREACH_LOG_LEVEL(f) f(trace) f(debug) f(info) f(warin) f(error) f(fatal)
 namespace myweb::zlog {
 
 enum class LogLevel : unsigned int {

@@ -27,7 +27,7 @@ struct std::formatter<myweb::zlog::LogLevel, CharT> : std::formatter<char, CharT
             return std::formatter<char, CharT>::format('D', fc);
         case myweb::zlog::LogLevel::info:
             return std::formatter<char, CharT>::format('I', fc);
-        case myweb::zlog::LogLevel::warining:
+        case myweb::zlog::LogLevel::warin:
             return std::formatter<char, CharT>::format('W', fc);
         case myweb::zlog::LogLevel::error:
             return std::formatter<char, CharT>::format('E', fc);

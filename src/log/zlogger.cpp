@@ -13,6 +13,7 @@
 
 #include "zlogger.h"
 #include "fast_io.h"
+#include "fast_io_device.h"
 #include "os.h"
 #include "zlog_msg.h"
 #include <cstring>
@@ -24,11 +25,16 @@ namespace myweb::zlog {
 void ZLog::printConsole()
 {
     using namespace std::chrono_literals;
+    using namespace fast_io::io;
     ZlogMsg msg{};
     if (log_qu_.wait_for_pop(msg, 100ms)) {
         std::string file_name = ZLOG_FILE_NAME(msg.loc_.file_name());
 
-        fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
+        // fast_io::io::println("[", msg.thread_id__, " ", file_name, ":", msg.loc_.line(), "]", msg.payload_);
+        auto v{posix_clock_gettime(fast_io::posix_clock_id::realtime)};
+        fast_io::iso8601_timestamp utc_tsp{utc(v)};
+        fast_io::iso8601_timestamp tsp{local(v)};
+        println(v);
     }
 }
 

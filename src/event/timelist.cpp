@@ -14,7 +14,6 @@
 #include "timelist.h"
 #include "timer.h"
 #include <chrono>
-#include <ratio>
 #include <thread>
 
 namespace myweb::event::timer {
