@@ -1,4 +1,5 @@
 if(CONFIG_LOG_USE_SPDLOG)
+add_subdirectory(fmt)
 add_subdirectory(spdlog)
 endif()
 
